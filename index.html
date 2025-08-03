@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeFiGuard - Smart Contract Security Analyzer</title>
+    
+    <!-- Bootstrap CSS with Replit theme -->
+    <link href="https://cdn.replit.com/agent/bootstrap-agent-dark-theme.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Header -->
+        <header class="text-center mb-5">
+            <div class="d-flex align-items-center justify-content-center mb-3">
+                <i class="fas fa-shield-alt fa-3x text-primary me-3"></i>
+                <h1 class="display-4 mb-0">DeFiGuard</h1>
+            </div>
+            <p class="lead text-muted">Ethereum Smart Contract Security Analyzer</p>
+            <p class="text-muted">Analyze smart contracts for security vulnerabilities and best practices using AI-powered insights</p>
+        </header>
+
+        <!-- Contract Analysis Form -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-search me-2"></i>
+                            Contract Analysis
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="analysis-form">
+                            <div class="mb-3">
+                                <label for="contract-address" class="form-label">Contract Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-link"></i>
+                                    </span>
+                                    <input 
+                                        type="text" 
+                                        class="form-control" 
+                                        id="contract-address" 
+                                        placeholder="0x..." 
+                                        pattern="^0x[a-fA-F0-9]{40}$"
+                                        required
+                                    >
+                                </div>
+                                <div class="form-text">Enter a valid Ethereum contract address (42 characters starting with 0x)</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100" id="analyze-btn">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Analyze Contract
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading-spinner" class="text-center my-5" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Analyzing contract... This may take a few moments.</p>
+        </div>
+
+        <!-- Analysis Results -->
+        <div id="analysis-results" class="mt-4" style="display: none;">
+            <div class="row">
+                <!-- Contract Information -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Contract Information
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="contract-info"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Score -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-shield-alt me-2"></i>
+                                Security Assessment
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="security-score"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vulnerabilities -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Security Vulnerabilities
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="vulnerabilities"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Functionality Analysis -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-cogs me-2"></i>
+                                Functionality Analysis
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="functionality"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cross-Chain Analysis -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-link me-2"></i>
+                                Cross-Chain Analysis
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="cross-chain-analysis"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1inch Integration -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-exchange-alt me-2"></i>
+                                1inch Integration
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="oneinch-integration"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gas Efficiency -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Gas Efficiency
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="gas-efficiency"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                Recommendations
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="recommendations"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary -->
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="card-title mb-0">
+                                <i class="fas fa-file-alt me-2"></i>
+                                Analysis Summary
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div id="summary"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Alert -->
+        <div id="error-alert" class="alert alert-danger mt-4" style="display: none;">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <span id="error-message"></span>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="container text-center mt-5 py-4 border-top">
+        <p class="text-muted">
+            <i class="fas fa-shield-alt me-1"></i>
+            DeFiGuard - Powered by OpenAI and Etherscan API
+        </p>
+        <small class="text-muted">
+            Always conduct professional security audits for production contracts
+        </small>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    
+    <!-- Main Application Script -->
+    <script>
+        // Contract analysis functionality
+        document.getElementById('analysis-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const contractAddress = document.getElementById('contract-address').value.trim();
+            
+            if (!contractAddress) {
+                showError('Please enter a contract address');
+                return;
+            }
+            
+            if (!contractAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
+                showError('Please enter a valid Ethereum contract address');
+                return;
+            }
+            
+            showLoading();
+            hideError();
+            hideResults();
+            
+            try {
+                const response = await fetch('/analyze_contract', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contract_address: contractAddress
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayAnalysisResults(data);
+                } else {
+                    showError(data.error || 'Analysis failed');
+                }
+            } catch (error) {
+                console.error('Analysis error:', error);
+                showError('Failed to analyze contract. Please check your connection and try again.');
+            } finally {
+                hideLoading();
+            }
+        });
+        
+        function showLoading() {
+            document.getElementById('loading-spinner').style.display = 'block';
+            document.getElementById('analyze-btn').disabled = true;
+        }
+        
+        function hideLoading() {
+            document.getElementById('loading-spinner').style.display = 'none';
+            document.getElementById('analyze-btn').disabled = false;
+        }
+        
+        function showError(message) {
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-alert').style.display = 'block';
+        }
+        
+        function hideError() {
+            document.getElementById('error-alert').style.display = 'none';
+        }
+        
+        function hideResults() {
+            document.getElementById('analysis-results').style.display = 'none';
+        }
+        
+        function displayAnalysisResults(data) {
+            // Contract Information
+            document.getElementById('contract-info').innerHTML = `
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>Name:</strong><br>
+                        <span class="text-info">${data.contract_name}</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>Address:</strong><br>
+                        <small class="text-muted font-monospace">${data.contract_address}</small>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>Compiler:</strong><br>
+                        <span class="text-muted">${data.compiler_version}</span>
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>Optimization:</strong><br>
+                        <span class="text-muted">${data.optimization_used}</span>
+                    </div>
+                </div>
+            `;
+            
+            // Security Score
+            const analysis = data.analysis;
+            const scoreColor = getScoreColor(analysis.security_score);
+            const riskBadgeClass = getRiskBadgeClass(analysis.risk_level);
+            
+            document.getElementById('security-score').innerHTML = `
+                <div class="text-center">
+                    <div class="display-6 ${scoreColor} mb-2">${analysis.security_score}/10</div>
+                    <span class="badge ${riskBadgeClass}">${analysis.risk_level} RISK</span>
+                </div>
+            `;
+            
+            // Vulnerabilities
+            let vulnerabilitiesHtml = '';
+            if (analysis.vulnerabilities && analysis.vulnerabilities.length > 0) {
+                vulnerabilitiesHtml = analysis.vulnerabilities.map(vuln => `
+                    <div class="alert alert-${getSeverityClass(vuln.severity)} mb-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <strong>${vuln.type}</strong>
+                                <span class="badge bg-${getSeverityClass(vuln.severity)} ms-2">${vuln.severity}</span>
+                            </div>
+                        </div>
+                        <p class="mb-1 mt-2">${vuln.description}</p>
+                        ${vuln.location ? `<small class="text-muted">Location: ${vuln.location}</small>` : ''}
+                    </div>
+                `).join('');
+            } else {
+                vulnerabilitiesHtml = '<div class="alert alert-success">No vulnerabilities detected</div>';
+            }
+            document.getElementById('vulnerabilities').innerHTML = vulnerabilitiesHtml;
+            
+            // Functionality Analysis
+            const func = analysis.functionality_analysis;
+            document.getElementById('functionality').innerHTML = `
+                <p><strong>Contract Type:</strong><br>${func.contract_type}</p>
+                <p><strong>Main Functions:</strong><br>${func.main_functions.join(', ')}</p>
+                ${func.token_standard ? `<p><strong>Token Standard:</strong><br>${func.token_standard}</p>` : ''}
+                <p><strong>Access Controls:</strong><br>${func.access_controls}</p>
+            `;
+            
+            // Cross-Chain Analysis
+            const crossChain = analysis.cross_chain_analysis;
+            if (crossChain) {
+                const chainBadge = crossChain.is_cross_chain ? 
+                    '<span class="badge bg-primary">Cross-Chain Enabled</span>' : 
+                    '<span class="badge bg-secondary">Single Chain</span>';
+                
+                document.getElementById('cross-chain-analysis').innerHTML = `
+                    <div class="mb-3">${chainBadge}</div>
+                    ${crossChain.is_cross_chain ? `
+                        <p><strong>Bridge Type:</strong><br>${crossChain.bridge_type || 'N/A'}</p>
+                        <p><strong>Supported Chains:</strong><br>${crossChain.supported_chains ? crossChain.supported_chains.join(', ') : 'N/A'}</p>
+                        <p><strong>Hashlock/Timelock:</strong><br>${crossChain.hashlock_timelock || 'N/A'}</p>
+                        ${crossChain.cross_chain_risks && crossChain.cross_chain_risks.length > 0 ? 
+                            '<div class="mt-3"><strong>Cross-Chain Risks:</strong><ul>' + 
+                            crossChain.cross_chain_risks.map(risk => `<li class="text-warning">${risk}</li>`).join('') + 
+                            '</ul></div>' : ''
+                        }
+                    ` : '<p class="text-muted">This contract does not implement cross-chain functionality.</p>'}
+                `;
+            }
+            
+            // 1inch Integration Analysis
+            const oneInch = analysis.oneInch_integration;
+            if (oneInch) {
+                const integrationBadge = oneInch.uses_1inch ? 
+                    '<span class="badge bg-success">1inch Integrated</span>' : 
+                    '<span class="badge bg-secondary">No 1inch Integration</span>';
+                
+                document.getElementById('oneinch-integration').innerHTML = `
+                    <div class="mb-3">${integrationBadge}</div>
+                    ${oneInch.uses_1inch ? `
+                        <p><strong>Integration Type:</strong><br><span class="text-info">${oneInch.integration_type || 'N/A'}</span></p>
+                        ${oneInch['1inch_contracts'] && oneInch['1inch_contracts'].length > 0 ? `
+                            <p><strong>1inch Contracts:</strong><br>
+                            ${oneInch['1inch_contracts'].map(addr => `<small class="font-monospace text-muted">${addr}</small>`).join('<br>')}
+                            </p>
+                        ` : ''}
+                        <p><strong>Security Assessment:</strong><br>${oneInch.integration_security || 'N/A'}</p>
+                    ` : '<p class="text-muted">This contract does not integrate with 1inch protocols.</p>'}
+                `;
+            }
+            
+            // Gas Efficiency
+            const gasColor = getScoreColor(analysis.gas_efficiency.score);
+            document.getElementById('gas-efficiency').innerHTML = `
+                <div class="text-center mb-3">
+                    <div class="h4 ${gasColor}">${analysis.gas_efficiency.score}/10</div>
+                    <small class="text-muted">Efficiency Score</small>
+                </div>
+                ${analysis.gas_efficiency.issues.length > 0 ? 
+                    '<div class="mt-3"><strong>Issues:</strong><ul>' + 
+                    analysis.gas_efficiency.issues.map(issue => `<li>${issue}</li>`).join('') + 
+                    '</ul></div>' : 
+                    '<div class="text-success">No gas efficiency issues found</div>'
+                }
+            `;
+            
+            // Recommendations
+            document.getElementById('recommendations').innerHTML = analysis.recommendations.length > 0 ?
+                '<ul>' + analysis.recommendations.map(rec => `<li>${rec}</li>`).join('') + '</ul>' :
+                '<div class="text-success">No specific recommendations at this time</div>';
+            
+            // Summary
+            document.getElementById('summary').innerHTML = `<p>${analysis.summary}</p>`;
+            
+            // Show results
+            document.getElementById('analysis-results').style.display = 'block';
+        }
+        
+        function getScoreColor(score) {
+            if (score >= 8) return 'text-success';
+            if (score >= 6) return 'text-warning';
+            if (score >= 4) return 'text-orange';
+            return 'text-danger';
+        }
+        
+        function getRiskBadgeClass(risk) {
+            switch(risk) {
+                case 'LOW': return 'bg-success';
+                case 'MEDIUM': return 'bg-warning';
+                case 'HIGH': return 'bg-orange';
+                case 'CRITICAL': return 'bg-danger';
+                default: return 'bg-secondary';
+            }
+        }
+        
+        function getSeverityClass(severity) {
+            switch(severity) {
+                case 'LOW': return 'success';
+                case 'MEDIUM': return 'warning';
+                case 'HIGH': return 'orange';
+                case 'CRITICAL': return 'danger';
+                default: return 'secondary';
+            }
+        }
+    </script>
+</body>
+</html>

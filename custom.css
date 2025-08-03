@@ -1,0 +1,119 @@
+/* Custom styles for DeFiGuard application */
+
+/* Orange color for medium-high warnings */
+.text-orange {
+    color: #fd7e14 !important;
+}
+
+.bg-orange {
+    background-color: #fd7e14 !important;
+    color: white;
+}
+
+.alert-orange {
+    color: #843206;
+    background-color: #fff3cd;
+    border-color: #ffc107;
+}
+
+/* Custom card styling for dark theme */
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* Loading animation enhancement */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* Code highlighting for contract addresses */
+.font-monospace {
+    font-family: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+/* Badge styling improvements */
+.badge {
+    font-size: 0.75em;
+}
+
+/* Security score display */
+.display-6 {
+    font-weight: 700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .display-4 {
+        font-size: 2rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Custom alert styles for vulnerability levels */
+.alert-success {
+    border-left: 4px solid #198754;
+}
+
+.alert-warning {
+    border-left: 4px solid #ffc107;
+}
+
+.alert-orange {
+    border-left: 4px solid #fd7e14;
+}
+
+.alert-danger {
+    border-left: 4px solid #dc3545;
+}
+
+/* Smooth transitions */
+.btn {
+    transition: all 0.15s ease-in-out;
+}
+
+/* Input focus styling */
+.form-control:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Footer styling */
+footer {
+    margin-top: auto;
+}
+
+/* Icon alignment */
+.fas, .fab {
+    vertical-align: middle;
+}
+
+/* Ensure proper spacing for analysis results */
+#analysis-results .card {
+    margin-bottom: 1rem;
+}
+
+/* Custom scrollbar for better UX (webkit browsers) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bs-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bs-secondary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bs-primary);
+}
